@@ -378,10 +378,12 @@ public class TestCluster extends TestDb {
         check(connApp2, len, "''");
         connApp2.close();
         // test non-admin cluster connection if only one server runs
-        connApp2 = getConnection(urlCluster +
+        assertThrows(ErrorCode.CLUSTER_ERROR_DATABASE_RUNS_ALONE,this).getConnection(urlCluster +
+                ";AUTO_RECONNECT=TRUE", user2, password2);
+       /* connApp2 = getConnection(urlCluster +
                 ";AUTO_RECONNECT=TRUE", user2, password2);
         check(connApp2, len, "''");
-        connApp2.close();
+        connApp2.close();*/
 
         n2.stop();
         deleteFiles();
@@ -443,9 +445,11 @@ public class TestCluster extends TestDb {
         conn = getConnection("jdbc:h2:tcp://" + serverList + "/test", user, password);
         check(conn, len, "''");
         conn.close();
-        conn = getConnection("jdbc:h2:tcp://" + serverList + "/test", user, password);
+        assertThrows(ErrorCode.CLUSTER_ERROR_DATABASE_RUNS_ALONE,this)
+                .getConnection("jdbc:h2:tcp://" + serverList + "/test", user, password);
+        /*conn = getConnection("jdbc:h2:tcp://" + serverList + "/test", user, password);
         check(conn, len, "''");
-        conn.close();
+        conn.close();*/
 
         // disable the cluster
         conn = getConnection("jdbc:h2:tcp://localhost:"+
